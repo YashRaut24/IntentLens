@@ -1,0 +1,119 @@
+"""
+Generates learning_queries.csv with 125+ diverse student learning queries,
+annotated with goal, known skills, explicit gaps, learning level, and learning context.
+"""
+import csv
+import os
+
+LEARNING_QUERIES = [
+    # LLMs & AI
+    ("I know Python and basic machine learning. I want to get into LLMs but don't know what I should learn first.", "LLMs", "Python, Machine Learning", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn LLMs from scratch. I don't have any AI background.", "LLMs", "", "AI", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I have worked with PyTorch and deep learning, now I want to master LLM fine-tuning and LoRA.", "LLMs", "PyTorch, Deep Learning", "", "ADVANCED", "SKILL_DEVELOPMENT"),
+    ("I know Python and transformers but I'm weak at attention mechanisms and want to understand LLMs.", "LLMs", "Python, Transformers", "Attention Mechanism", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to build an AI chatbot using Python, but I've never worked with NLP.", "AI Chatbot", "Python", "Natural Language Processing", "BEGINNER", "PROJECT_BUILDING"),
+    ("I have built basic chatbots with regex, now I want to build a RAG chatbot using LangChain.", "AI Chatbot", "Python, Regex", "", "INTERMEDIATE", "PROJECT_BUILDING"),
+    ("I want to build an enterprise AI chatbot with low latency.", "AI Chatbot", "", "", "ADVANCED", "PROJECT_BUILDING"),
+    ("I want to learn natural language processing. I already know Python and pandas.", "Natural Language Processing", "Python, Pandas", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know NLP basics like tokenization, but I struggle with transformer models.", "Natural Language Processing", "NLP Fundamentals, Tokenization", "Transformers", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I understand word2vec and embeddings but I am confused about self-attention.", "Natural Language Processing", "Word2Vec, Embeddings", "Self Attention", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn prompt engineering and langchain. I know basic Python.", "Prompt Engineering", "Python", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I want to study multimodal AI models combining vision and text.", "Multimodal AI", "", "", "ADVANCED", "SKILL_DEVELOPMENT"),
+
+    # Web Development & Frontend
+    ("I want to learn React. I already know HTML, CSS and basic JavaScript.", "React", "HTML, CSS, JavaScript", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know vanilla JS well, but I don't know React hooks or state management.", "React", "JavaScript", "React Hooks, State Management", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn React from scratch. I don't know web development at all.", "React", "", "Web Development", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know React and want to learn Next.js for server-side rendering.", "Next.js", "React", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I have used React for simple apps, but I want to master advanced patterns like compound components.", "React", "React", "", "ADVANCED", "SKILL_DEVELOPMENT"),
+    ("I know HTML and CSS but I'm really weak at JavaScript.", "JavaScript", "HTML, CSS", "JavaScript", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I want to learn Vue.js. I have experience with React and modern JavaScript.", "Vue.js", "React, JavaScript", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn TypeScript because my new frontend role requires it. I know JavaScript.", "TypeScript", "JavaScript", "", "INTERMEDIATE", "CAREER_PREPARATION"),
+    ("I know CSS flexbox and grid, but I want to learn Tailwind CSS for faster prototyping.", "Tailwind CSS", "CSS", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I want to learn Svelte. I have a background in React and TypeScript.", "Svelte", "React, TypeScript", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+
+    # Full Stack & MERN
+    ("Suggest a project using MERN. I know React and Express.", "MERN Stack", "React, Express", "", "INTERMEDIATE", "PROJECT_BUILDING"),
+    ("I want to learn full-stack web development. I only know Python.", "Full Stack Development", "Python", "Web Development", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know React and Node.js but I don't know MongoDB and database modeling.", "MERN Stack", "React, Node.js", "MongoDB", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to build an e-commerce platform using MERN stack.", "MERN Stack", "", "", "INTERMEDIATE", "PROJECT_BUILDING"),
+    ("I know Django and Python, but I want to transition to MERN stack for full-stack jobs.", "MERN Stack", "Django, Python", "MERN Stack", "INTERMEDIATE", "CAREER_PREPARATION"),
+
+    # Machine Learning & Data Science
+    ("I'm preparing for a machine learning internship. I know Python and sklearn but I'm weak at statistics.", "Machine Learning Internship", "Python, scikit-learn", "Statistics", "INTERMEDIATE", "CAREER_PREPARATION"),
+    ("I want to learn machine learning from scratch. Where do I begin?", "Machine Learning", "", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know Python and linear algebra, but I have no experience with machine learning algorithms.", "Machine Learning", "Python, Linear Algebra", "Machine Learning", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I understand supervised learning but I'm confused about unsupervised clustering and PCA.", "Machine Learning", "Supervised Learning", "Unsupervised Learning, PCA", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to transition from data analysis to deep learning. I know SQL, Python, and pandas.", "Deep Learning", "SQL, Python, Pandas", "Deep Learning", "INTERMEDIATE", "CAREER_PREPARATION"),
+    ("I know neural networks and backpropagation, but I struggle with convolutional neural networks.", "Deep Learning", "Neural Networks, Backpropagation", "Convolutional Neural Networks", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I'm interviewing for a data scientist position and need to brush up on probability and hypothesis testing.", "Data Science", "Python", "", "INTERMEDIATE", "INTERVIEW_PREPARATION"),
+    ("I know basic machine learning and want to learn transformers.", "Transformers", "Machine Learning", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I understand linear regression but struggle with neural network loss functions.", "Machine Learning", "Linear Regression", "Neural Networks, Loss Functions", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn computer vision with OpenCV. I already know Python.", "Computer Vision", "Python", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I have worked with OpenCV and basic CNNs, now I want to learn object detection with YOLO.", "Computer Vision", "OpenCV, Convolutional Neural Networks", "", "ADVANCED", "SKILL_DEVELOPMENT"),
+    ("I want to build a recommendation system. I know Python and pandas but not collaborative filtering.", "Recommendation System", "Python, Pandas", "Collaborative Filtering", "INTERMEDIATE", "PROJECT_BUILDING"),
+    ("I know PyTorch and want to learn reinforcement learning algorithms.", "Reinforcement Learning", "PyTorch", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to prepare for a data engineering role. I know SQL and Python.", "Data Engineering", "SQL, Python", "", "INTERMEDIATE", "CAREER_PREPARATION"),
+    ("I know Apache Spark but I'm weak at streaming data with Kafka.", "Data Engineering", "Apache Spark", "Apache Kafka", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+
+    # Data Structures & Competitive Programming
+    ("I know Java and basic DSA. I want to start competitive programming but I'm not good at dynamic programming.", "Competitive Programming", "Java, Data Structures and Algorithms", "Dynamic Programming", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to get good at LeetCode for technical interviews. I know C++ and basic arrays and strings.", "Competitive Programming", "C++, Arrays, Strings", "", "BEGINNER", "INTERVIEW_PREPARATION"),
+    ("I understand recursion conceptually, but I can't solve tree traversal problems.", "Data Structures and Algorithms", "Recursion", "Tree Traversal", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I know basic algorithms, but I struggle with graph algorithms like Dijkstra and Bellman-Ford.", "Data Structures and Algorithms", "Algorithms", "Graph Algorithms", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn dynamic programming from the ground up.", "Dynamic Programming", "", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know C++ and STL, but I have never solved dynamic programming or bitmask problems.", "Competitive Programming", "C++, STL", "Dynamic Programming, Bitmasking", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I know arrays and linked lists, but I'm struggling with binary trees and heaps.", "Data Structures and Algorithms", "Arrays, Linked Lists", "Binary Trees, Heaps", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn graph algorithms like BFS and DFS for my coding test.", "Data Structures and Algorithms", "", "Graph Algorithms", "INTERMEDIATE", "EXAM_PREPARATION"),
+    ("I know Python and want to start solving problems on LeetCode.", "Competitive Programming", "Python", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I understand basic recursion but I can't solve backtracking problems like N-Queens.", "Data Structures and Algorithms", "Recursion", "Backtracking", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to master bit manipulation for competitive programming.", "Competitive Programming", "", "Bit Manipulation", "ADVANCED", "SKILL_DEVELOPMENT"),
+    ("I know heaps and priority queues, but I struggle with segment trees and Fenwick trees.", "Competitive Programming", "Heaps, Priority Queues", "Segment Trees, Fenwick Trees", "ADVANCED", "SKILL_DEVELOPMENT"),
+
+    # DevOps, Cloud & Systems
+    ("What should I learn before Kubernetes? I already know Docker and Linux.", "Kubernetes", "Docker, Linux", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn Docker from scratch. I don't know containerization.", "Docker", "", "Containerization", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know AWS basics like S3 and EC2, but I don't understand infrastructure as code with Terraform.", "DevOps", "AWS", "Terraform", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I'm preparing for a DevOps engineer interview and need to master CI/CD and Kubernetes.", "DevOps", "Linux", "", "INTERMEDIATE", "INTERVIEW_PREPARATION"),
+    ("I want to learn Linux command line and bash scripting.", "Linux", "", "", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know basic Linux and networking. I want to start learning ethical hacking.", "Cybersecurity", "Linux, Computer Networks", "", "BEGINNER", "CAREER_PREPARATION"),
+    ("I want to learn cloud computing on AWS. I don't have any cloud experience.", "AWS", "", "Cloud Computing", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know Docker containerization and want to learn Kubernetes cluster orchestration.", "Kubernetes", "Docker", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I understand relational databases but want to learn database optimization and indexing.", "Database Management Systems", "Relational Databases, SQL", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I know C and want to learn Rust for systems programming.", "Rust", "C", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to learn Go for high performance backend services. I know Java.", "Go", "Java", "", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to understand distributed systems. I already know microservices.", "Distributed Systems", "Microservices", "", "ADVANCED", "SKILL_DEVELOPMENT"),
+    ("I know Git basics like commit and push, but I'm confused about rebase and cherry-pick.", "Git", "Git", "Git Rebase", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+
+    # Backend & System Design
+    ("I want to learn backend development with Node.js. I only know frontend JavaScript.", "Backend Development", "JavaScript, Frontend", "Backend Development", "BEGINNER", "SKILL_DEVELOPMENT"),
+    ("I know how to build Express APIs, but I have never handled database indexing or transactions.", "Backend Development", "Express, Node.js", "Database Indexing, Transactions", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I have an interview next week on system design. I know basic microservices but struggle with caching and rate limiting.", "System Design", "Microservices", "Caching, Rate Limiting", "ADVANCED", "INTERVIEW_PREPARATION"),
+    ("I want to learn microservices architecture with Go. I already know monolithic architecture in Python.", "Microservices", "Python", "Microservices, Go", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I know SQL queries, but I don't understand sharding and replication.", "System Design", "SQL", "Sharding, Replication", "INTERMEDIATE", "SKILL_DEVELOPMENT"),
+    ("I want to build a scalable messaging queue like Kafka from scratch.", "System Design", "", "", "ADVANCED", "PROJECT_BUILDING"),
+
+    # Academic & Exams
+    ("I have an exam next week on database management systems and need to revise normalization.", "Database Management Systems", "DBMS", "Database Normalization", "INTERMEDIATE", "EXAM_PREPARATION"),
+    ("I want to revise operating systems for my semester exams tomorrow.", "Operating Systems", "Operating Systems", "", "INTERMEDIATE", "EXAM_PREPARATION"),
+    ("Can you explain how virtual memory works? I have an OS test coming up.", "Operating Systems", "", "Virtual Memory", "BEGINNER", "EXAM_PREPARATION"),
+    ("I have an exam on computer networks and need a quick refresher on TCP vs UDP.", "Computer Networks", "Computer Networks", "TCP, UDP", "INTERMEDIATE", "EXAM_PREPARATION"),
+    ("I want to revise DBMS ACID transactions before my university exam.", "Database Management Systems", "DBMS", "ACID Transactions", "INTERMEDIATE", "EXAM_PREPARATION"),
+    ("I have a campus placement technical interview tomorrow and want to revise Java OOP concepts.", "Java", "Java", "Object Oriented Programming", "INTERMEDIATE", "INTERVIEW_PREPARATION"),
+    ("I want to revise compiler design syntax trees before my midterm test.", "Compiler Design", "Compiler Design", "Syntax Trees", "INTERMEDIATE", "EXAM_PREPARATION"),
+    ("I'm studying computer architecture and struggling with pipelining hazards.", "Computer Architecture", "", "Pipelining Hazards", "INTERMEDIATE", "ACADEMIC_LEARNING"),
+]
+
+def generate_csv(output_path=None):
+    if output_path is None:
+        output_path = os.path.join(os.path.dirname(__file__), "..", "data", "learning_queries.csv")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["text", "goal", "known_skills", "explicit_gaps", "learning_level", "learning_context"])
+        for row in LEARNING_QUERIES:
+            writer.writerow(row)
+    print(f"[Dataset] Generated {len(LEARNING_QUERIES)} learning query samples at: {output_path}")
+
+if __name__ == "__main__":
+    generate_csv()

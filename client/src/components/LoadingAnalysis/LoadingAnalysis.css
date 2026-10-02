@@ -1,0 +1,70 @@
+.loading-analysis-card {
+  background-color: var(--bg-card);
+  border: 1px dashed var(--accent-orange-border);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.loading-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-orange);
+  background-color: var(--accent-orange-subtle);
+  border: 1px solid var(--accent-orange-border);
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+}
+
+.loading-spinner-dots {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--accent-orange);
+  animation: pulseFade 1.2s infinite ease-in-out both;
+}
+
+.pulse-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.pulse-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes pulseFade {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.loading-stage-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+  min-height: 1.8rem;
+}
+
+.loading-subtext {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}

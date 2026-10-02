@@ -1,0 +1,133 @@
+{
+  "LLMs": [
+    "Python",
+    "Machine Learning",
+    "Neural Networks",
+    "Deep Learning",
+    "Attention Mechanism",
+    "Transformers"
+  ],
+  "Large Language Models": [
+    "Python",
+    "Machine Learning",
+    "Neural Networks",
+    "Deep Learning",
+    "Attention Mechanism",
+    "Transformers"
+  ],
+  "React": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "DOM Manipulation",
+    "JSX",
+    "Component Fundamentals"
+  ],
+  "AI Chatbot": [
+    "Python",
+    "NLP Fundamentals",
+    "Text Processing",
+    "Tokenization",
+    "Embeddings",
+    "Transformers"
+  ],
+  "Machine Learning": [
+    "Python",
+    "Linear Algebra",
+    "Calculus",
+    "Statistics",
+    "Probability",
+    "Data Preprocessing"
+  ],
+  "Machine Learning Internship": [
+    "Python",
+    "Statistics",
+    "Probability",
+    "scikit-learn",
+    "Model Evaluation",
+    "Feature Engineering"
+  ],
+  "Deep Learning": [
+    "Python",
+    "Machine Learning",
+    "Linear Algebra",
+    "Neural Networks",
+    "Backpropagation"
+  ],
+  "Competitive Programming": [
+    "Programming Fundamentals",
+    "Data Structures and Algorithms",
+    "Time Complexity",
+    "Recursion",
+    "Dynamic Programming",
+    "Graph Algorithms"
+  ],
+  "Kubernetes": [
+    "Linux Fundamentals",
+    "Networking Basics",
+    "Docker",
+    "Containerization",
+    "YAML Configuration"
+  ],
+  "Docker": [
+    "Linux Commands",
+    "Operating Systems",
+    "Networking Fundamentals",
+    "Shell Scripting"
+  ],
+  "Backend Development": [
+    "Programming Fundamentals",
+    "HTTP and REST APIs",
+    "Relational Databases",
+    "Authentication and JWT",
+    "Server Architecture"
+  ],
+  "MERN Stack": [
+    "HTML and CSS",
+    "JavaScript Fundamentals",
+    "React",
+    "Node.js",
+    "Express",
+    "MongoDB"
+  ],
+  "Natural Language Processing": [
+    "Python",
+    "Text Preprocessing",
+    "Tokenization",
+    "Statistical NLP",
+    "Embeddings",
+    "Transformers"
+  ],
+  "Dynamic Programming": [
+    "Recursion",
+    "Memoization",
+    "Tabulation",
+    "Time Complexity Analysis"
+  ],
+  "Computer Networks": [
+    "OSI Model",
+    "TCP/IP Protocols",
+    "DNS and HTTP",
+    "Routing and Subnetting"
+  ],
+  "Operating Systems": [
+    "Processes and Threads",
+    "CPU Scheduling",
+    "Memory Management and Paging",
+    "Deadlocks and Synchronization"
+  ],
+  "Database Management Systems": [
+    "Relational Model",
+    "SQL Queries",
+    "Database Normalization",
+    "ACID Transactions",
+    "Indexing"
+  ],
+  "System Design": [
+    "Client-Server Architecture",
+    "Databases and Sharding",
+    "Caching Strategies",
+    "Load Balancing",
+    "Microservices"
+  ]
+}
